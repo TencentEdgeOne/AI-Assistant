@@ -1,6 +1,6 @@
 # 为任何网站添加 AI 对话助手
 
-本文介绍如何使用 EdgeOne Makers 的 **SiteAgent** 模板，为你的网站添加一个 AI 对话助手。只需一行代码嵌入，AI 就能自动理解页面内容、查询你的业务 API，实时回答用户问题。
+本文介绍如何使用 **SiteAgent** 模板，为你的网站添加一个 AI 对话助手。只需一行代码嵌入，AI 就能自动理解页面内容、查询你的业务 API，实时回答用户问题。
 
 **你将获得：**
 
@@ -24,61 +24,23 @@
 ## 前置条件
 
 1. 一个 [EdgeOne Makers](https://console.cloud.tencent.com/edgeone/makers) 账号
-2. 你的网站（任何框架：React、Vue、WordPress、静态 HTML 等）
-3. （可选）你的后端 API 地址，如果需要 AI 查询业务数据
+2. 一个 GitHub 账号
+3. 你的网站（任何框架：React、Vue、WordPress、静态 HTML 等）
+4. （可选）你的后端 API 地址，如果需要 AI 查询业务数据
 
 ---
 
 ## 快速开始
 
-### 1、部署 Agent
+### 1、Fork 项目并配置 API Schema
 
-**第一步：Fork 项目到你的 GitHub**
+**第一步：Fork 到你的 GitHub**
 
 打开 [https://github.com/xiaban-x/site-agent](https://github.com/xiaban-x/site-agent)，点击右上角 **Fork** 按钮，将项目复制到你自己的 GitHub 账号下。
 
-**第二步：在 Makers 中导入部署**
+**第二步：配置 API Schema（可选）**
 
-进入 [EdgeOne Makers 控制台](https://edgeone.ai/makers)，点击 **新建项目** → **从 Git 导入**，选择你刚 Fork 的仓库，按照提示完成部署。
-
-### 2、绑定自定义域名
-
-进入 EdgeOne Makers 控制台 → 你的项目 → **设置** → **域名**，绑定你自己的域名，例如：`chat.example.com`
-
-> **提示：** 绑定自定义域名后无需任何鉴权即可访问，这是正式使用的前提条件。
-
-### 3、配置环境变量
-
-进入项目 → **设置** → **环境变量**，填写以下配置：
-
-| 变量 | 必填 | 说明 |
-|------|:----:|------|
-| `AI_GATEWAY_API_KEY` | ✅ | AI 模型的 API Key |
-| `AI_GATEWAY_BASE_URL` | ✅ | 模型网关地址，Makers 内置模型填 `https://ai-gateway.edgeone.link/v1` |
-| `DATA_API_BASE_URL` | ❌ | 你的后端 API 根地址，如 `https://api.example.com` |
-| `DATA_API_KEY` | ❌ | 后端认证 Token（会加到请求的 `Authorization: Bearer` 头） |
-
-> **提示：** 如果你使用 Makers 内置模型，`AI_GATEWAY_API_KEY` 可在 Makers 控制台的 Models 页面获取。`DATA_API_BASE_URL` 和 `DATA_API_KEY` 在需要 AI 查询你的后端数据时才需要配置。
-
-### 4、嵌入到你的网站
-
-在你网站的 HTML 中，`</body>` 之前添加一行代码：
-
-```html
-<script src="https://chat.example.com/embed.js" async></script>
-```
-
-刷新页面，右下角出现聊天气泡，点击即可对话。**完成！**
-
----
-
-## 让 AI 查询你的业务 API
-
-默认情况下，AI 只能根据当前页面内容回答问题。如果你希望 AI 能实时查询你的后端数据（如搜索文章、查询订单、获取商品信息），需要告诉 AI 你有哪些接口。
-
-### 1、编写 API Schema
-
-在 Agent 项目根目录创建一个 `api-schema.json` 文件，描述你的后端接口：
+如果你需要 AI 查询你的后端数据，克隆 Fork 后的仓库到本地，编辑根目录下的 `api-schema.json` 文件，描述你的后端接口：
 
 ```json
 {
@@ -111,17 +73,42 @@
 - `endpoint`：HTTP 方法 + 路径，路径中 `{param}` 会被参数值替换
 - `parameters`：参数定义，`required: true` 表示必填
 
-### 2、确保后端允许跨域
+编辑完成后提交推送到你的 GitHub 仓库。
 
-Agent 会从 EdgeOne 域名向你的后端发起请求，你需要在后端设置 CORS：
+> **提示：** 如果暂时不需要 AI 查询后端数据，可以跳过这一步。AI 默认就能根据页面内容回答问题。
 
+### 2、导入部署并配置环境变量
+
+进入 [EdgeOne Makers 控制台](https://console.cloud.tencent.com/edgeone/makers)，点击 **新建项目** → **从 Git 导入**，选择你 Fork 的仓库。
+
+在部署配置页面，填写环境变量：
+
+| 变量 | 必填 | 说明 |
+|------|:----:|------|
+| `AI_GATEWAY_API_KEY` | ✅ | AI 模型的 API Key |
+| `AI_GATEWAY_BASE_URL` | ✅ | 模型网关地址，Makers 内置模型填 `https://ai-gateway.edgeone.link/v1` |
+| `DATA_API_BASE_URL` | ❌ | 你的后端 API 根地址，如 `https://api.example.com` |
+| `DATA_API_KEY` | ❌ | 后端认证 Token（会加到请求的 `Authorization: Bearer` 头） |
+
+> **提示：** `AI_GATEWAY_API_KEY` 可在 Makers 控制台的 Models 页面获取。`DATA_API_BASE_URL` 和 `DATA_API_KEY` 仅在需要 AI 查询后端数据时配置。如果部署时忘了填，也可以在项目 → **设置** → **环境变量** 中补充。
+
+点击部署，等待完成。
+
+### 3、绑定自定义域名
+
+进入 EdgeOne Makers 控制台 → 你的项目 → **域名管理**，绑定你自己的域名，例如：`chat.example.com`
+
+> **提示：** 绑定自定义域名后无需任何鉴权即可访问，这是正式使用的前提条件。
+
+### 4、嵌入到你的网站
+
+在你网站的 HTML 中，`</body>` 之前添加一行代码：
+
+```html
+<script src="https://chat.example.com/embed.js" async></script>
 ```
-Access-Control-Allow-Origin: *
-Access-Control-Allow-Methods: GET, POST, OPTIONS
-Access-Control-Allow-Headers: Content-Type, Authorization
-```
 
-配置完成后重新部署，AI 就能在对话中实时调用你的接口了。
+刷新页面，右下角出现聊天气泡，点击即可对话。**完成！**
 
 ---
 
@@ -153,6 +140,39 @@ Access-Control-Allow-Headers: Content-Type, Authorization
 
 ```
 你是一个专业的电商客服助手。回答要简洁友好，优先推荐店铺商品。如果用户询问退换货政策，引导他们联系人工客服。
+```
+
+---
+
+## API Schema 详解
+
+### endpoint 路径规则
+
+- 路径中的 `{param}` 会被同名参数值替换：`GET /api/posts/{id}` + `{"id": "5"}` → `GET /api/posts/5`
+- 未用于路径替换的参数：
+  - GET 请求 → 作为 query string：`GET /api/posts?q=react`
+  - POST/PUT 请求 → 作为 JSON body
+
+### description 编写技巧
+
+`description` 决定了 AI 什么时候调用你的接口，写得好不好直接影响效果：
+
+```json
+// ❌ 太模糊
+"description": "获取数据"
+
+// ✅ 清楚说明功能 + 使用时机
+"description": "Get the full content of a single blog post by its ID. Use search_posts first if you don't know the ID."
+```
+
+### 后端跨域要求
+
+Agent 会从 EdgeOne 域名向你的后端发起请求，你需要在后端设置 CORS：
+
+```
+Access-Control-Allow-Origin: *
+Access-Control-Allow-Methods: GET, POST, OPTIONS
+Access-Control-Allow-Headers: Content-Type, Authorization
 ```
 
 ---
@@ -204,28 +224,33 @@ onMounted(() => {
 ```
 用户在你的网站提问
        ↓
-embed.js 自动提取页面内容 + 发送问题
+embed.js 注入气泡 + iframe（加载同源 /widget）
+       ↓
+embed.js 提取页面内容，通过 postMessage 发送给 iframe
        ↓
 ┌─────────────────────────────────────────┐
-│          EdgeOne Makers Agent           │
+│     iframe 内的 /widget 页面（同源）     │
 │                                         │
+│  fetch('/chat') → Agent 处理：           │
 │  1. 将页面内容注入 AI 上下文             │
 │  2. AI 判断是否需要调用后端接口          │
 │  3. 如果需要 → 调用你的 API → 获取数据   │
 │  4. AI 基于所有信息生成回答              │
-│  5. 流式返回给前端                       │
+│  5. SSE 流式返回给前端                   │
 └─────────────────────────────────────────┘
        ↓
 用户看到实时生成的回答
 ```
+
+> **为什么用 iframe？** iframe 加载的是 Agent 同域的 `/widget` 页面，内部所有 API 请求都是同源的，不存在跨域问题。
 
 ---
 
 ## 本地调试
 
 ```bash
-# 克隆项目
-git clone <your-repo>
+# 克隆你 Fork 的仓库
+git clone https://github.com/你的用户名/site-agent.git
 cd site-agent
 
 # 安装依赖
@@ -233,13 +258,10 @@ npm install
 
 # 配置环境变量
 cp .env.example .env
-# 编辑 .env 填入你的 AI_GATEWAY_API_KEY 等
+# 编辑 .env 填入 AI_GATEWAY_API_KEY 等
 
 # 启动开发服务器
 npm run dev
-
-# 部署更新
-npm run deploy
 ```
 
 ---
@@ -266,9 +288,9 @@ npm run deploy
 
 可以。你的后端可以部署在任何有公网地址的地方（AWS、阿里云、自建服务器等），只需设置 `DATA_API_BASE_URL` 指向你的后端地址。
 
-**Q：需要后端提供 schema 接口吗？**
+**Q：不配置 api-schema.json 能用吗？**
 
-不需要。直接在 Agent 项目里放一个 `api-schema.json` 文件即可，无需后端额外开发。
+能用。不配置时 AI 只根据当前页面内容回答问题，不会调用任何外部接口。
 
 **Q：AI 会不会调用 schema 里没定义的接口？**
 
@@ -292,4 +314,3 @@ npm run deploy
 
 - [EdgeOne Makers 控制台](https://edgeone.ai/makers)
 - [EdgeOne Pages 文档](https://edgeone.ai/document/pages/overview)
-- [API Schema 格式参考](./api-schema.example.json)

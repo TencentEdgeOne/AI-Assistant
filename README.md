@@ -22,7 +22,7 @@ This template provides a production-ready AI site agent with three layers of con
 
 Two usage modes:
 - **Standalone page** (`/`) — Full-screen chat interface
-- **Embeddable widget** — Compact chat panel rendered via Shadow DOM
+- **Embeddable widget** (`/widget`) — Compact chat panel for iframe embedding
 
 ## Embed on Your Website
 
@@ -32,7 +32,7 @@ Add this single line to any webpage (blog, docs site, e-commerce, etc.):
 <script src="https://your-site-agent.edgeone.app/embed.js" async></script>
 ```
 
-A floating chat bubble appears in the bottom-right corner. The script automatically extracts the current page content and sends it to the AI — **no backend changes needed**.
+A floating chat bubble appears in the bottom-right corner. Clicking it opens an iframe pointing to `/widget` on the same origin — the AI automatically reads the current page content. **No backend changes needed**.
 
 ### Customization
 

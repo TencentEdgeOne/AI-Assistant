@@ -51,7 +51,7 @@ export default function ChatPanel({
   // Listen for page context from parent window (embed.js sends via postMessage)
   useEffect(() => {
     function handleMessage(e: MessageEvent) {
-      if (e.data?.type === '__ca_page_context' && e.data.payload) {
+      if (e.data?.type === '__sa_page_context' && e.data.payload) {
         pageContextRef.current = e.data.payload;
       }
     }
