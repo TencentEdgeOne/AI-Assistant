@@ -4,7 +4,11 @@
 
 **框架：** DeepAgents · **类别：** 站点智能助手 · **语言：** TypeScript
 
-[![部署到 EdgeOne Makers](https://cdnstatic.tencentcs.com/edgeone/pages/deploy.svg)](https://edgeone.ai/makers/new?template=site-agent&from=within&fromAgent=1&agentLang=typescript)
+## 部署
+
+1. Fork 本项目：[https://github.com/xiaban-x/site-agent](https://github.com/xiaban-x/site-agent)
+2. 进入 [EdgeOne Makers](https://console.cloud.tencent.com/edgeone/makers) → **新建项目** → **从 Git 导入**
+3. 选择你 Fork 的仓库，按提示完成部署
 
 ## 概览
 

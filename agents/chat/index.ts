@@ -12,7 +12,7 @@
 import { resolveModelName } from '../_model';
 import { createLogger, sseEvent, createSSEResponse, corsResponse, streamChat } from '../_shared';
 import type { ChatMessage } from '../_shared';
-import { loadApiSchema, schemaToAnthropicTools, callTool } from '../_api-proxy';
+import { loadApiSchema, callTool } from '../_api-proxy';
 import type { ApiSchema } from '../_api-proxy';
 
 const logger = createLogger('chat');

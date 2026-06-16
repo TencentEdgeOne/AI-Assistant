@@ -4,7 +4,11 @@ AI-powered site agent that can be embedded into any website with a single line o
 
 **Framework:** DeepAgents · **Category:** Site Agent · **Language:** TypeScript
 
-[![Deploy to EdgeOne Makers](https://cdnstatic.tencentcs.com/edgeone/pages/deploy.svg)](https://edgeone.ai/makers/new?template=site-agent&from=within&fromAgent=1&agentLang=typescript)
+## Deploy
+
+1. Fork this repo: [https://github.com/xiaban-x/site-agent](https://github.com/xiaban-x/site-agent)
+2. Go to [EdgeOne Makers](https://console.tencentcloud.com/edgeone/makers) → **New Project** → **Import from Git**
+3. Select your forked repo and follow the prompts to deploy
 
 ## Overview
 

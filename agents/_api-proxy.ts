@@ -87,33 +87,6 @@ export async function loadApiSchema(env: Record<string, string | undefined>): Pr
   return null;
 }
 
-// ─── Convert schema to Anthropic tool format ─────────────────────────────────
-export function schemaToAnthropicTools(schema: ApiSchema): any[] {
-  return schema.tools.map((tool) => {
-    const properties: Record<string, any> = {};
-    const required: string[] = [];
-
-    for (const [name, param] of Object.entries(tool.parameters)) {
-      properties[name] = {
-        type: param.type || 'string',
-        description: param.description || name,
-        ...(param.enum ? { enum: param.enum } : {}),
-      };
-      if (param.required) required.push(name);
-    }
-
-    return {
-      name: tool.name,
-      description: tool.description,
-      input_schema: {
-        type: 'object',
-        properties,
-        ...(required.length > 0 ? { required } : {}),
-      },
-    };
-  });
-}
-
 // ─── Execute a tool call by proxying to user's API ───────────────────────────
 export async function callTool(
   schema: ApiSchema,

@@ -23,7 +23,7 @@
 
 ## 前置条件
 
-1. 一个 [EdgeOne Makers](https://edgeone.ai/makers) 账号
+1. 一个 [EdgeOne Makers](https://console.cloud.tencent.com/edgeone/makers) 账号
 2. 你的网站（任何框架：React、Vue、WordPress、静态 HTML 等）
 3. （可选）你的后端 API 地址，如果需要 AI 查询业务数据
 
@@ -31,13 +31,15 @@
 
 ## 快速开始
 
-### 1、一键部署 Agent
+### 1、部署 Agent
 
-点击下方按钮，将 SiteAgent 模板部署到 EdgeOne Makers：
+**第一步：Fork 项目到你的 GitHub**
 
-[![部署到 EdgeOne Makers](https://cdnstatic.tencentcs.com/edgeone/pages/deploy.svg)](https://edgeone.ai/makers/new?template=site-agent&from=within&fromAgent=1&agentLang=typescript)
+打开 [https://github.com/xiaban-x/site-agent](https://github.com/xiaban-x/site-agent)，点击右上角 **Fork** 按钮，将项目复制到你自己的 GitHub 账号下。
 
-部署完成后，你会获得一个项目地址，例如：`https://your-project.edgeone.app`
+**第二步：在 Makers 中导入部署**
+
+进入 [EdgeOne Makers 控制台](https://edgeone.ai/makers)，点击 **新建项目** → **从 Git 导入**，选择你刚 Fork 的仓库，按照提示完成部署。
 
 ### 2、绑定自定义域名
 
@@ -47,14 +49,16 @@
 
 ### 3、配置环境变量
 
-进入项目 → **设置** → **环境变量**，填写以下必填项：
+进入项目 → **设置** → **环境变量**，填写以下配置：
 
-| 变量 | 说明 |
-|------|------|
-| `AI_GATEWAY_API_KEY` | AI 模型的 API Key |
-| `AI_GATEWAY_BASE_URL` | 模型网关地址，Makers 内置模型填 `https://ai-gateway.edgeone.link/v1` |
+| 变量 | 必填 | 说明 |
+|------|:----:|------|
+| `AI_GATEWAY_API_KEY` | ✅ | AI 模型的 API Key |
+| `AI_GATEWAY_BASE_URL` | ✅ | 模型网关地址，Makers 内置模型填 `https://ai-gateway.edgeone.link/v1` |
+| `DATA_API_BASE_URL` | ❌ | 你的后端 API 根地址，如 `https://api.example.com` |
+| `DATA_API_KEY` | ❌ | 后端认证 Token（会加到请求的 `Authorization: Bearer` 头） |
 
-> **提示：** 如果你使用 Makers 内置模型，`AI_GATEWAY_API_KEY` 可在 Makers 控制台的 Models 页面获取。
+> **提示：** 如果你使用 Makers 内置模型，`AI_GATEWAY_API_KEY` 可在 Makers 控制台的 Models 页面获取。`DATA_API_BASE_URL` 和 `DATA_API_KEY` 在需要 AI 查询你的后端数据时才需要配置。
 
 ### 4、嵌入到你的网站
 
@@ -107,16 +111,7 @@
 - `endpoint`：HTTP 方法 + 路径，路径中 `{param}` 会被参数值替换
 - `parameters`：参数定义，`required: true` 表示必填
 
-### 2、配置后端地址
-
-在环境变量中添加：
-
-| 变量 | 说明 |
-|------|------|
-| `DATA_API_BASE_URL` | 你的后端 API 根地址，如 `https://api.example.com` |
-| `DATA_API_KEY` | （可选）后端认证 Token |
-
-### 3、确保后端允许跨域
+### 2、确保后端允许跨域
 
 Agent 会从 EdgeOne 域名向你的后端发起请求，你需要在后端设置 CORS：
 
