@@ -1,0 +1,27 @@
+{
+  "tools": [
+    {
+      "name": "search_posts",
+      "description": "Search blog posts by keyword. Returns title, summary, category, tags, and author.",
+      "endpoint": "GET /api/posts",
+      "parameters": {
+        "q": { "type": "string", "description": "Search keyword" },
+        "category": { "type": "string", "description": "Filter by category" }
+      }
+    },
+    {
+      "name": "get_post",
+      "description": "Get the full content of a single blog post by its ID. Use search_posts first if you don't know the ID.",
+      "endpoint": "GET /api/posts/{id}",
+      "parameters": {
+        "id": { "type": "string", "description": "The post ID", "required": true }
+      }
+    },
+    {
+      "name": "get_categories",
+      "description": "List all blog categories with article count.",
+      "endpoint": "GET /api/categories",
+      "parameters": {}
+    }
+  ]
+}
