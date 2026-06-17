@@ -111,8 +111,8 @@ Open http://localhost:8088 to view the app.
 
 ## Resources
 
-- [Makers Agents Documentation](https://pages.edgeone.ai/document/agents)
-- [Makers Quick Start](https://pages.edgeone.ai/document/agents-quick-start)
+- [EdgeOne Makers Agents — Documentation](https://pages.edgeone.ai/document/agents)
+- [EdgeOne Makers — Quick Start](https://pages.edgeone.ai/document/agents-quick-start)
 - [Makers Models](https://pages.edgeone.ai/document/models)
 
 ## License
