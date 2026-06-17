@@ -214,7 +214,7 @@ export default function ChatPanel({ mode = 'full' }: { mode?: 'full' | 'widget' 
                 </linearGradient>
               </defs>
             </svg>
-            <span className="text-sm font-semibold text-gray-900">{config.name}</span>
+            <span className="text-sm font-semibold text-gray-900">{isZh ? 'AI 助手' : config.name}</span>
           </div>
         </div>
         <div className="flex items-center gap-1.5">
@@ -236,7 +236,7 @@ export default function ChatPanel({ mode = 'full' }: { mode?: 'full' | 'widget' 
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gradient-to-r from-indigo-500 to-purple-500 text-white text-xs font-medium hover:shadow-md transition"
               >
                 <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M8.5 1.5v5h5v3h-5v5h-3v-5h-5v-3h5v-5h3z" fill="currentColor"/></svg>
-                Deploy
+                {isZh ? '部署' : 'Deploy'}
               </a>
             </>
           )}
@@ -274,16 +274,13 @@ export default function ChatPanel({ mode = 'full' }: { mode?: 'full' | 'widget' 
               </svg>
             </div>
             <h3 className="text-lg font-semibold text-gray-900 mb-2">
-              {isZh ? '你好，我是 ' : 'Hey, This is '}<span className="bg-gradient-to-r from-indigo-500 via-pink-400 to-amber-400 bg-clip-text text-transparent">{config.name}</span>
+              {isZh ? '你好，我是 ' : 'Hey, This is '}<span className="bg-gradient-to-r from-indigo-500 via-pink-400 to-amber-400 bg-clip-text text-transparent">{isZh ? 'AI 助手' : config.name}</span>
             </h3>
             <p className="text-xs text-gray-400 mb-4 max-w-[320px] leading-relaxed">
               {isZh
                 ? '可嵌入任何网站的 AI 助手，一行代码添加聊天 Widget，自动理解页面内容，支持实时查询后端 API。'
                 : 'Embeddable AI assistant for any website. One line of code to add a chat widget that understands page content and queries your backend APIs.'}
             </p>
-            {config.welcome && (
-              <p className="text-sm text-gray-500 mb-4 max-w-[280px]">{config.welcome}</p>
-            )}
 
             {/* Suggested Questions */}
             {config.suggestedQuestions.length > 0 && (
@@ -374,36 +371,32 @@ export default function ChatPanel({ mode = 'full' }: { mode?: 'full' | 'widget' 
 
       {/* Input */}
       <div className="px-5 py-3.5 border-t border-gray-100 bg-gray-50/50">
-        <div className="flex items-end gap-2.5">
-          <div className="flex-1 relative">
-            <textarea
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onCompositionStart={() => { composingRef.current = true; }}
-              onCompositionEnd={() => { composingRef.current = false; }}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' && !e.shiftKey && !composingRef.current) {
-                  e.preventDefault();
-                  sendMessage();
-                }
-              }}
-              placeholder={isZh ? '有问题？随时问我…' : 'Got questions? Feel free to ask.'}
-              rows={1}
-              className="w-full resize-none rounded-xl border border-gray-200 bg-white px-4 py-2.5 pr-10 text-sm outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 transition placeholder:text-gray-400"
-              style={{ minHeight: '40px', maxHeight: '120px' }}
-            />
-            <div className="absolute right-2 top-1/2 -translate-y-1/2">
-              {isStreaming ? (
-                <button onClick={stopStream} className="p-1.5 rounded-lg bg-red-500 text-white hover:bg-red-600 transition">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><rect x="6" y="6" width="12" height="12" rx="2" fill="currentColor"/></svg>
-                </button>
-              ) : (
-                <button onClick={() => sendMessage()} disabled={!input.trim()} className="p-1.5 rounded-lg bg-gradient-to-r from-indigo-500 to-purple-500 text-white disabled:opacity-30 disabled:cursor-not-allowed hover:shadow-md transition">
-                  <svg width="14" height="14" viewBox="0 0 20 20" fill="none"><path d="M0.99 7.67c-.48-.16-.49-.42.01-.59L18.71 1.17c.49-.16.77.08.63.57L14.28 19.5c-.14.49-.42.5-.63.04L10.32 12.02l5.57-7.43-7.42 5.57L0.99 7.67z" fill="currentColor"/></svg>
-                </button>
-              )}
-            </div>
-          </div>
+        <div className="flex items-center gap-2">
+          <textarea
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onCompositionStart={() => { composingRef.current = true; }}
+            onCompositionEnd={() => { composingRef.current = false; }}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && !e.shiftKey && !composingRef.current) {
+                e.preventDefault();
+                sendMessage();
+              }
+            }}
+            placeholder={isZh ? '有问题？随时问我…' : 'Got questions? Feel free to ask.'}
+            rows={1}
+            className="flex-1 resize-none rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 transition placeholder:text-gray-400"
+            style={{ minHeight: '40px', maxHeight: '120px' }}
+          />
+          {isStreaming ? (
+            <button onClick={stopStream} className="p-2 rounded-lg bg-red-500 text-white hover:bg-red-600 transition flex-shrink-0">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="6" y="6" width="12" height="12" rx="2" fill="currentColor"/></svg>
+            </button>
+          ) : (
+            <button onClick={() => sendMessage()} disabled={!input.trim()} className="p-2 rounded-lg bg-gradient-to-r from-indigo-500 to-purple-500 text-white disabled:opacity-30 disabled:cursor-not-allowed hover:shadow-md transition flex-shrink-0">
+              <svg width="16" height="16" viewBox="0 0 20 20" fill="none"><path d="M0.99 7.67c-.48-.16-.49-.42.01-.59L18.71 1.17c.49-.16.77.08.63.57L14.28 19.5c-.14.49-.42.5-.63.04L10.32 12.02l5.57-7.43-7.42 5.57L0.99 7.67z" fill="currentColor"/></svg>
+            </button>
+          )}
         </div>
       </div>
     </div>

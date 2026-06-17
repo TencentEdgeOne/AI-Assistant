@@ -85,16 +85,36 @@ Place an `api-schema.json` in the project root to let AI query your backend:
 
 Set `DATA_API_BASE_URL` to your backend address.
 
-## Quick Start
+## Local Development
+
+**Prerequisites:**
+- Node.js 18+
+- EdgeOne CLI (`npm i -g edgeone`)
 
 ```bash
 npm install
-npm run dev
-npm run deploy
+cp .env.example .env
+# Edit .env and fill in AI_GATEWAY_API_KEY and AI_GATEWAY_BASE_URL
+edgeone makers dev
 ```
 
-## Documentation
+Open http://localhost:8088 to view the app.
 
-- [Integration Guide (中文)](./docs/integration-guide.md)
-- [EdgeOne Makers](https://edgeone.ai/makers)
-- [EdgeOne Pages Docs](https://edgeone.ai/document/pages/overview)
+### How to get `AI_GATEWAY_API_KEY`
+
+1. Open [Makers Console](https://edgeone.ai/makers/new?s_url=https://console.tencentcloud.com/edgeone/makers)
+2. Log in and enable Makers
+3. Go to **Makers → Models → API Key**, create a new key
+4. Set it as `AI_GATEWAY_API_KEY`
+
+> Built-in models are free within quota, great for testing. For production, bring your own key (BYOK) from any OpenAI-compatible provider.
+
+## Resources
+
+- [Makers Agents Documentation](https://pages.edgeone.ai/document/agents)
+- [Makers Quick Start](https://pages.edgeone.ai/document/agents-quick-start)
+- [Makers Models](https://pages.edgeone.ai/document/models)
+
+## License
+
+MIT

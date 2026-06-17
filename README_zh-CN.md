@@ -85,16 +85,36 @@
 
 设置 `DATA_API_BASE_URL` 指向你的后端地址。
 
-## 快速开始
+## 本地开发
+
+**前置条件：**
+- Node.js 18+
+- EdgeOne CLI（`npm i -g edgeone`）
 
 ```bash
 npm install
-npm run dev
-npm run deploy
+cp .env.example .env
+# 编辑 .env 填入 AI_GATEWAY_API_KEY 和 AI_GATEWAY_BASE_URL
+edgeone makers dev
 ```
 
-## 文档链接
+打开 http://localhost:8088 查看应用。
 
-- [嵌入集成指南（中文）](./docs/integration-guide.md)
-- [EdgeOne Makers](https://edgeone.ai/makers)
-- [EdgeOne Pages 文档](https://edgeone.ai/document/pages/overview)
+### 获取 `AI_GATEWAY_API_KEY`
+
+1. 打开 [Makers 控制台](https://edgeone.ai/makers/new?s_url=https://console.tencentcloud.com/edgeone/makers)
+2. 登录并开通 Makers
+3. 进入 **Makers → Models → API Key**，创建一个 Key
+4. 填入 `AI_GATEWAY_API_KEY`
+
+> 内置模型在配额内免费，适合测试验证。生产环境建议绑定自己的付费模型 Key（BYOK）。
+
+## 相关资源
+
+- [Makers Agents 文档](https://pages.edgeone.ai/document/agents)
+- [Makers 快速开始](https://pages.edgeone.ai/document/agents-quick-start)
+- [Makers Models](https://pages.edgeone.ai/document/models)
+
+## 许可证
+
+MIT
