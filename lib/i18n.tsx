@@ -4,7 +4,7 @@ import React, { createContext, useContext, useState, useCallback, useEffect, Rea
 
 const translations = {
   en: {
-    title: 'SiteAgent',
+    title: 'AI Assistant',
     online: 'Online',
     placeholder: 'Type a message…',
     send: 'Send',
@@ -15,7 +15,7 @@ const translations = {
     thinking: 'Thinking…',
   },
   zh: {
-    title: 'SiteAgent',
+    title: 'AI 助手',
     online: '在线',
     placeholder: '输入消息…',
     send: '发送',

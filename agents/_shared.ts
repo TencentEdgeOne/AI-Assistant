@@ -82,7 +82,7 @@ export interface ChatMessage {
 export interface StreamDelta {
   type: 'text' | 'tool_call' | 'done';
   text?: string;
-  toolCall?: { id: string; name: string; arguments: string };
+  toolCall?: { index: number; id: string; name: string; arguments: string };
   finishReason?: string | null;
 }
 
@@ -157,6 +157,7 @@ export async function* streamChat(
             yield {
               type: 'tool_call',
               toolCall: {
+                index: tc.index ?? 0,
                 id: tc.id || '',
                 name: tc.function?.name || '',
                 arguments: tc.function?.arguments || '',

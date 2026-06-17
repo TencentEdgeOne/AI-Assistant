@@ -1,6 +1,6 @@
 # 为任何网站添加 AI 对话助手
 
-本文介绍如何使用 **SiteAgent** 模板，为你的网站添加一个 AI 对话助手。只需一行代码嵌入，AI 就能自动理解页面内容、查询你的业务 API，实时回答用户问题。
+本文介绍如何使用 **AI Assistant** 模板，为你的网站添加一个 AI 对话助手。只需一行代码嵌入，AI 就能自动理解页面内容、查询你的业务 API，实时回答用户问题。
 
 **你将获得：**
 
@@ -36,7 +36,7 @@
 
 **第一步：Fork 到你的 GitHub**
 
-打开 [https://github.com/xiaban-x/site-agent](https://github.com/xiaban-x/site-agent)，点击右上角 **Fork** 按钮，将项目复制到你自己的 GitHub 账号下。
+打开 [https://github.com/xiaban-x/ai-assistant](https://github.com/xiaban-x/ai-assistant)，点击右上角 **Fork** 按钮，将项目复制到你自己的 GitHub 账号下。
 
 **第二步：配置 API Schema（可选）**
 
@@ -134,13 +134,31 @@
 
 ---
 
-## 自定义系统提示词
+## 自定义系统提示词与推荐问题
 
-通过 `SYSTEM_PROMPT` 环境变量，你可以定制 AI 的行为风格：
+编辑项目根目录的 `ai-assistant.config.json`：
 
+```json
+{
+  "name": "我的助手",
+  "welcome": "你好！有什么可以帮你的？",
+  "systemPrompt": "你是一个专业的电商客服助手。回答要简洁友好，优先推荐店铺商品。",
+  "suggestedQuestions": [
+    "有哪些热门商品？",
+    "如何查询订单状态？",
+    "退换货政策是什么？"
+  ]
+}
 ```
-你是一个专业的电商客服助手。回答要简洁友好，优先推荐店铺商品。如果用户询问退换货政策，引导他们联系人工客服。
-```
+
+| 字段 | 说明 |
+|------|------|
+| `name` | 聊天面板顶部显示的名称 |
+| `welcome` | 首次打开时的欢迎提示 |
+| `systemPrompt` | AI 系统提示词，决定 AI 的行为风格 |
+| `suggestedQuestions` | 推荐问题列表，用户可直接点击发送 |
+
+修改后推送代码或重新部署即可生效。
 
 ---
 
@@ -250,8 +268,8 @@ embed.js 提取页面内容，通过 postMessage 发送给 iframe
 
 ```bash
 # 克隆你 Fork 的仓库
-git clone https://github.com/你的用户名/site-agent.git
-cd site-agent
+git clone https://github.com/你的用户名/ai-assistant.git
+cd ai-assistant
 
 # 安装依赖
 npm install
@@ -273,12 +291,10 @@ npm run dev
 | `AI_GATEWAY_API_KEY` | ✅ | AI 模型 API Key |
 | `AI_GATEWAY_BASE_URL` | ✅ | 模型网关地址 |
 | `AI_GATEWAY_MODEL` | ❌ | 模型 ID，默认 `@makers/deepseek-v4-flash` |
-| `SYSTEM_PROMPT` | ❌ | 自定义系统提示词 |
-| `ASSISTANT_NAME` | ❌ | 助手名称 |
-| `WELCOME_MESSAGE` | ❌ | 欢迎消息 |
 | `DATA_API_BASE_URL` | ❌ | 你的后端 API 根地址 |
 | `DATA_API_KEY` | ❌ | 后端认证 Token |
-| `SITEMAP_URL` | ❌ | 你网站的 sitemap.xml 地址（启用全站知识搜索） |
+
+> **提示：** 助手名称、欢迎语、系统提示词、推荐问题等配置在项目根目录的 `ai-assistant.config.json` 中修改。
 
 ---
 
@@ -307,6 +323,10 @@ npm run dev
 **Q：如何限制 AI 调用频率？**
 
 在你的后端做限流即可。Agent 每轮对话最多调用 4 次工具。
+
+**Q：Fork 完仓库后，在 Makers 控制台里找不到我的仓库？**
+
+这通常是 GitHub 授权范围的问题。前往 GitHub → Settings → Applications → EdgeOne Makers，检查是否授权了「All repositories」或手动添加了你新 Fork 的仓库。添加后刷新 Makers 导入页面即可看到。
 
 ---
 

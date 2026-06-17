@@ -1,10 +1,9 @@
 /**
  * Chat endpoint — POST /chat
  *
- * Three-layer context acquisition:
+ * Two-layer context acquisition:
  *   A. Page context — embed.js extracts current page content, injected into system prompt
- *   B. Site knowledge — if SITEMAP_URL is set, a search_knowledge tool is available
- *   C. Business API — if DATA_API_SCHEMA_URL is set, user-defined tools are available
+ *   B. Business API — user-defined tools via api-schema.json
  *
  * Uses OpenAI-compatible streaming API (works with EdgeOne AI Gateway).
  * When tools are available, runs a tool-calling loop (max 4 turns).
@@ -14,6 +13,8 @@ import { createLogger, sseEvent, createSSEResponse, corsResponse, streamChat } f
 import type { ChatMessage } from '../_shared';
 import { loadApiSchema, callTool } from '../_api-proxy';
 import type { ApiSchema } from '../_api-proxy';
+import { readFile } from 'fs/promises';
+import { resolve } from 'path';
 
 const logger = createLogger('chat');
 
@@ -23,13 +24,40 @@ const MAX_TOOL_TURNS = 4;
 // In-process conversation history
 const _history = new Map<string, ChatMessage[]>();
 
+// ─── Load config file ────────────────────────────────────────────────────────
+interface AssistantConfig {
+  name?: string;
+  welcome?: string;
+  systemPrompt?: string;
+  suggestedQuestions?: string[];
+}
+
+let _configCache: AssistantConfig | null = null;
+let _configLoaded = false;
+
+async function loadConfig(): Promise<AssistantConfig> {
+  if (_configLoaded) return _configCache || {};
+  _configLoaded = true;
+  try {
+    const content = await readFile(resolve(process.cwd(), 'ai-assistant.config.json'), 'utf-8');
+    _configCache = JSON.parse(content);
+    logger.log(`[config] loaded ai-assistant.config.json`);
+  } catch {
+    _configCache = {};
+  }
+  return _configCache || {};
+}
+
 // ─── System prompt builder (Layer A: page context) ───────────────────────────
 function buildSystemPrompt(
+  config: AssistantConfig,
   env: Record<string, string | undefined>,
   pageContext?: { title?: string; url?: string; content?: string },
 ): string {
-  let prompt = env.SYSTEM_PROMPT ||
+  let prompt = env.SYSTEM_PROMPT || config.systemPrompt ||
     'You are a helpful, friendly AI assistant. Answer questions clearly and concisely. Use Markdown formatting when appropriate.';
+
+  prompt += '\n\nWhen using tools, always provide all required parameters. If a tool call fails due to missing parameters, do NOT retry with the same empty input — instead, try a different tool or answer based on available information.';
 
   if (pageContext && (pageContext.title || pageContext.content)) {
     prompt += `\n\n---\n## Current Page Context\n`;
@@ -59,11 +87,22 @@ function schemaToOpenAITools(schema: ApiSchema): any[] {
       if (param.required) required.push(name);
     }
 
+    // Enhance description with parameter info for models that struggle with schema
+    let enhancedDesc = tool.description;
+    const paramEntries = Object.entries(tool.parameters);
+    if (paramEntries.length > 0) {
+      const paramHints = paramEntries.map(([name, param]) => {
+        const req = param.required ? ', REQUIRED' : '';
+        return `${name} (${param.type || 'string'}${req}): ${param.description || name}`;
+      });
+      enhancedDesc += `\nParameters:\n- ${paramHints.join('\n- ')}`;
+    }
+
     return {
       type: 'function',
       function: {
         name: tool.name,
-        description: tool.description,
+        description: enhancedDesc,
         parameters: {
           type: 'object',
           properties,
@@ -74,32 +113,6 @@ function schemaToOpenAITools(schema: ApiSchema): any[] {
   });
 }
 
-// ─── Knowledge search tool (Layer B, OpenAI format) ──────────────────────────
-function getKnowledgeTool(): any {
-  return {
-    type: 'function',
-    function: {
-      name: 'search_site_knowledge',
-      description: 'Search the indexed site knowledge base for articles matching a query.',
-      parameters: {
-        type: 'object',
-        properties: {
-          query: { type: 'string', description: 'Search query' },
-          limit: { type: 'number', description: 'Max results (default 5)' },
-        },
-        required: ['query'],
-      },
-    },
-  };
-}
-
-async function handleKnowledgeSearch(input: Record<string, any>): Promise<any> {
-  return {
-    results: [],
-    message: `No indexed content found for "${input.query}". Configure SITEMAP_URL to enable full-site indexing.`,
-  };
-}
-
 // ─── Main handler ────────────────────────────────────────────────────────────
 export async function onRequest(context: any) {
   // Handle CORS preflight
@@ -108,6 +121,7 @@ export async function onRequest(context: any) {
   }
 
   const ctxEnv: Record<string, string | undefined> = context.env ?? process.env ?? {};
+  const config = await loadConfig();
   const body = context.request.body ?? {};
   const message = typeof body.message === 'string' ? body.message.trim() : '';
   const pageContext: { title?: string; url?: string; content?: string } | undefined = body.pageContext;
@@ -117,22 +131,15 @@ export async function onRequest(context: any) {
   }
 
   const signal: AbortSignal | undefined = context.request.signal;
-  // Support conversation_id from body (for cross-origin simple requests) or platform context
   const conversationId: string = body.conversation_id || context.conversation_id || '';
   const model = resolveModelName(ctxEnv);
   const baseURL = ctxEnv.AI_GATEWAY_BASE_URL || '';
   const apiKey = ctxEnv.AI_GATEWAY_API_KEY || '';
-  const systemPrompt = buildSystemPrompt(ctxEnv, pageContext);
 
-  // ─── Assemble available tools (Layers B + C) ─────────────────────────────
+  // ─── Assemble available tools (Layer C) ──────────────────────────────────
   const tools: any[] = [];
   let apiSchema: ApiSchema | null = null;
 
-  if (ctxEnv.SITEMAP_URL) {
-    tools.push(getKnowledgeTool());
-  }
-
-  // Load API schema from env var, remote URL, or local file
   logger.log(`[tools] attempting to load API schema...`);
   apiSchema = await loadApiSchema(ctxEnv);
   if (apiSchema) {
@@ -141,6 +148,8 @@ export async function onRequest(context: any) {
   } else {
     logger.log(`[tools] no API schema found (set DATA_API_SCHEMA, DATA_API_SCHEMA_URL, or place api-schema.json in project root)`);
   }
+
+  const systemPrompt = buildSystemPrompt(config, ctxEnv, pageContext);
 
   // ─── Conversation history ────────────────────────────────────────────────
   if (!_history.has(conversationId)) {
@@ -183,41 +192,52 @@ export async function onRequest(context: any) {
           }
 
           if (delta.type === 'tool_call' && delta.toolCall) {
-            // Accumulate tool call arguments (may arrive in chunks)
+            // Accumulate tool call arguments (may arrive in chunks, matched by index)
             const tc = delta.toolCall;
-            let existing = toolCalls.find((t) => t.id === tc.id);
-            if (!existing && tc.id) {
-              existing = { id: tc.id, name: tc.name, arguments: '' };
-              toolCalls.push(existing);
+            let existing = toolCalls[tc.index];
+            if (!existing) {
+              existing = { id: tc.id || `tc_${tc.index}`, name: tc.name || '', arguments: '' };
+              toolCalls[tc.index] = existing;
             }
-            if (existing) {
-              if (tc.name) existing.name = tc.name;
-              existing.arguments += tc.arguments;
-            }
+            if (tc.id) existing.id = tc.id;
+            if (tc.name) existing.name = tc.name;
+            existing.arguments += tc.arguments;
           }
         }
 
+        // Filter out any undefined slots from sparse array
+        toolCalls = toolCalls.filter(Boolean);
+
         // Save assistant message to history
-        if (assistantText) {
-          history.push({ role: 'assistant', content: assistantText });
-          while (history.length > MAX_HISTORY) history.shift();
-        } else if (toolCalls.length > 0) {
+        if (assistantText || toolCalls.length > 0) {
           history.push({
             role: 'assistant',
-            content: '',
-            tool_calls: toolCalls.map((tc) => ({
-              id: tc.id,
-              type: 'function',
-              function: { name: tc.name, arguments: tc.arguments },
-            })),
+            content: assistantText,
+            ...(toolCalls.length > 0 ? {
+              tool_calls: toolCalls.map((tc) => ({
+                id: tc.id,
+                type: 'function',
+                function: { name: tc.name, arguments: tc.arguments },
+              })),
+            } : {}),
           });
           while (history.length > MAX_HISTORY) history.shift();
         }
 
         // No tool calls → done
-        if (toolCalls.length === 0) break;
+        if (toolCalls.length === 0) {
+          // If AI produced no text but we have tool results, do one more round
+          // without tools to force a text answer
+          if (!assistantText && turns < MAX_TOOL_TURNS && history.some(h => h.role === 'tool')) {
+            logger.log(`[stream] AI produced no text after tools, forcing one more round without tools`);
+            tools.length = 0;
+            continue;
+          }
+          break;
+        }
 
         // ─── Execute tool calls ──────────────────────────────────────────
+        let allFailed = true;
         for (const tc of toolCalls) {
           if (sig?.aborted) break;
 
@@ -227,13 +247,13 @@ export async function onRequest(context: any) {
           yield sseEvent({ type: 'tool_call', tool: tc.name, input });
 
           let result: any;
-          if (tc.name === 'search_site_knowledge') {
-            result = await handleKnowledgeSearch(input);
-          } else if (apiSchema) {
+          if (apiSchema) {
             result = await callTool(apiSchema, ctxEnv.DATA_API_BASE_URL || '', ctxEnv.DATA_API_KEY, tc.name, input);
           } else {
             result = { error: `Unknown tool: ${tc.name}` };
           }
+
+          if (!result.error) allFailed = false;
 
           yield sseEvent({ type: 'tool_result', tool: tc.name, result });
 
@@ -243,6 +263,24 @@ export async function onRequest(context: any) {
             tool_call_id: tc.id,
           });
           while (history.length > MAX_HISTORY) history.shift();
+        }
+
+        // If any tool call failed, disable tools for next round
+        // so AI must generate a text answer with available data
+        if (!allFailed) {
+          // Partial success — check if any had errors
+          const recentResults = history.slice(-toolCalls.length);
+          const hasAnyError = recentResults.some(h => {
+            if (h.role !== 'tool') return false;
+            try { return !!JSON.parse(h.content as string).error; } catch { return false; }
+          });
+          if (hasAnyError) {
+            logger.log(`[stream] some tool calls failed, disabling tools for final answer`);
+            tools.length = 0;
+          }
+        } else {
+          logger.log(`[stream] all ${toolCalls.length} tool calls failed, disabling tools for final answer`);
+          tools.length = 0;
         }
 
         toolCalls = [];

@@ -2,11 +2,6 @@
   "buildCommand": "npm run build",
   "outputDirectory": ".next",
   "framework": "nextjs",
-  "cloudFunctions": {
-    "nodejs": {
-      "includeFiles": []
-    }
-  },
   "agents": {
     "framework": "deepagents"
   }
