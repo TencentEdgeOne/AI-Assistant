@@ -6,9 +6,7 @@
 
 ## 部署
 
-1. Fork 本项目：[https://github.com/xiaban-x/ai-assistant](https://github.com/xiaban-x/ai-assistant)
-2. 进入 [EdgeOne Makers](https://edgeone.ai/makers) → **新建项目** → **从 Git 导入**
-3. 选择你 Fork 的仓库，按提示完成部署
+[![部署到 EdgeOne Makers](https://cdnstatic.tencentcs.com/edgeone/pages/deploy.svg)](https://console.cloud.tencent.com/edgeone/makers/new?template=ai-assistant&from=within&fromAgent=1&agentLang=typescript)
 
 ## 概览
 

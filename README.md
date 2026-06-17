@@ -6,9 +6,7 @@ Embeddable AI assistant for any website. One line of code to add a chat widget t
 
 ## Deploy
 
-1. Fork this repo: [https://github.com/xiaban-x/ai-assistant](https://github.com/xiaban-x/ai-assistant)
-2. Go to [EdgeOne Makers](https://edgeone.ai/makers) → **New Project** → **Import from Git**
-3. Select your forked repo and follow the prompts to deploy
+[![Deploy to EdgeOne Makers](https://cdnstatic.tencentcs.com/edgeone/pages/deploy.svg)](https://edgeone.ai/makers/new?template=ai-assistant&from=within&fromAgent=1&agentLang=typescript)
 
 ## Overview
 

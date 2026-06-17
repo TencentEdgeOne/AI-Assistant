@@ -32,56 +32,25 @@
 
 ## 快速开始
 
-### 1、Fork 项目并配置 API Schema
+### 1、部署 Agent
 
-**第一步：Fork 到你的 GitHub**
+**方式一：一键部署（推荐）**
 
-打开 [https://github.com/xiaban-x/ai-assistant](https://github.com/xiaban-x/ai-assistant)，点击右上角 **Fork** 按钮，将项目复制到你自己的 GitHub 账号下。
+点击下方按钮，直接部署到 EdgeOne Makers：
 
-**第二步：配置 API Schema（可选）**
+[![部署到 EdgeOne Makers](https://cdnstatic.tencentcs.com/edgeone/pages/deploy.svg)](https://edgeone.ai/makers/new?template=ai-assistant&from=within&fromAgent=1&agentLang=typescript)
 
-如果你需要 AI 查询你的后端数据，克隆 Fork 后的仓库到本地，编辑根目录下的 `api-schema.json` 文件，描述你的后端接口：
+在部署配置页面，填写环境变量（见下方第 2 步）。
 
-```json
-{
-  "tools": [
-    {
-      "name": "search_products",
-      "description": "Search products by keyword. Returns product name, price, and stock status.",
-      "endpoint": "GET /api/products",
-      "parameters": {
-        "q": { "type": "string", "description": "Search keyword" },
-        "category": { "type": "string", "description": "Filter by category" }
-      }
-    },
-    {
-      "name": "get_product",
-      "description": "Get full details of a product by ID. Use search_products first if you don't know the ID.",
-      "endpoint": "GET /api/products/{id}",
-      "parameters": {
-        "id": { "type": "string", "description": "Product ID", "required": true }
-      }
-    }
-  ]
-}
-```
+**方式二：手动部署**
 
-**字段说明：**
+Fork [本项目](https://github.com/TencentEdgeOne/AI-Assistant) 到你的 GitHub，然后在 [EdgeOne Makers](https://edgeone.ai/makers) → **新建项目** → **从 Git 导入** 中选择你的仓库。
 
-- `name`：工具名称，英文 + 下划线
-- `description`：告诉 AI 这个接口是干什么的，**写得越清楚 AI 越准确**
-- `endpoint`：HTTP 方法 + 路径，路径中 `{param}` 会被参数值替换
-- `parameters`：参数定义，`required: true` 表示必填
+> **提示：** 手动部署适合需要提前修改 `api-schema.json` 或配置文件的场景。
 
-编辑完成后提交推送到你的 GitHub 仓库。
+### 2、配置环境变量
 
-> **提示：** 如果暂时不需要 AI 查询后端数据，可以跳过这一步。AI 默认就能根据页面内容回答问题。
-
-### 2、导入部署并配置环境变量
-
-进入 [EdgeOne Makers 控制台](https://console.cloud.tencent.com/edgeone/makers)，点击 **新建项目** → **从 Git 导入**，选择你 Fork 的仓库。
-
-在部署配置页面，填写环境变量：
+在部署配置页面（或部署后进入项目 → **设置** → **环境变量**），填写以下配置：
 
 | 变量 | 必填 | 说明 |
 |------|:----:|------|
