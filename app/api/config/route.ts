@@ -8,7 +8,7 @@ export async function GET() {
   if (!_cache) {
     let config: any = {};
     try {
-      const content = await readFile(resolve(process.cwd(), 'ai-assistant.config.json'), 'utf-8');
+      const content = await readFile(resolve(process.cwd(), 'ai-chat-assistant.config.json'), 'utf-8');
       config = JSON.parse(content);
     } catch {}
 
@@ -40,7 +40,7 @@ export async function GET() {
     }
 
     _cache = {
-      name: config.name || 'AI Assistant',
+      name: config.name || 'AI Chat Assistant',
       welcome: config.welcome || '',
       suggestedQuestions,
     };

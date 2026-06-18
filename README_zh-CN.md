@@ -6,7 +6,7 @@
 
 ## 部署
 
-[![部署到 EdgeOne Makers](https://cdnstatic.tencentcs.com/edgeone/pages/deploy.svg)](https://console.cloud.tencent.com/edgeone/makers/new?template=ai-assistant&from=within&fromAgent=1&agentLang=typescript)
+[![部署到 EdgeOne Makers](https://cdnstatic.tencentcs.com/edgeone/pages/deploy.svg)](https://console.cloud.tencent.com/edgeone/makers/new?template=ai-chat-assistant&from=within&fromAgent=1&agentLang=typescript)
 
 ## 概览
 
@@ -20,7 +20,7 @@
 ## 嵌入到你的网站
 
 ```html
-<script src="https://your-ai-assistant.edgeone.app/embed.js" async></script>
+<script src="https://your-ai-chat-assistant.edgeone.app/embed.js" async></script>
 ```
 
 页面右下角会出现一个浮动聊天气泡，点击后弹出 iframe 对话面板。脚本自动提取当前页面内容并发送给 AI — **无需修改任何后端代码**。
@@ -29,7 +29,7 @@
 
 ```html
 <script
-  src="https://your-ai-assistant.edgeone.app/embed.js"
+  src="https://your-ai-chat-assistant.edgeone.app/embed.js"
   data-color="#10b981"
   data-position="bottom-left"
   async>
@@ -43,7 +43,7 @@
 
 ## 配置文件
 
-编辑项目根目录的 `ai-assistant.config.json`：
+编辑项目根目录的 `ai-chat-assistant.config.json`：
 
 ```json
 {

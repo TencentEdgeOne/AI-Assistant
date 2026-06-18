@@ -1,4 +1,4 @@
-# AI Assistant
+# AI Chat Assistant
 
 Embeddable AI assistant for any website. One line of code to add a chat widget that understands page content and queries your backend APIs via function calling.
 
@@ -6,7 +6,7 @@ Embeddable AI assistant for any website. One line of code to add a chat widget t
 
 ## Deploy
 
-[![Deploy to EdgeOne Makers](https://cdnstatic.tencentcs.com/edgeone/pages/deploy.svg)](https://edgeone.ai/makers/new?template=ai-assistant&from=within&fromAgent=1&agentLang=typescript)
+[![Deploy to EdgeOne Makers](https://cdnstatic.tencentcs.com/edgeone/pages/deploy.svg)](https://edgeone.ai/makers/new?template=ai-chat-assistant&from=within&fromAgent=1&agentLang=typescript)
 
 ## Overview
 
@@ -20,7 +20,7 @@ Two layers of context awareness:
 ## Embed on Your Website
 
 ```html
-<script src="https://your-ai-assistant.edgeone.app/embed.js" async></script>
+<script src="https://your-ai-chat-assistant.edgeone.app/embed.js" async></script>
 ```
 
 A floating chat bubble appears in the bottom-right corner. Clicking it opens an iframe pointing to `/widget` on the same origin — the AI automatically reads the current page content. **No backend changes needed**.
@@ -29,7 +29,7 @@ A floating chat bubble appears in the bottom-right corner. Clicking it opens an 
 
 ```html
 <script
-  src="https://your-ai-assistant.edgeone.app/embed.js"
+  src="https://your-ai-chat-assistant.edgeone.app/embed.js"
   data-color="#10b981"
   data-position="bottom-left"
   async>
@@ -43,11 +43,11 @@ A floating chat bubble appears in the bottom-right corner. Clicking it opens an 
 
 ## Configuration
 
-Edit `ai-assistant.config.json` in the project root:
+Edit `ai-chat-assistant.config.json` in the project root:
 
 ```json
 {
-  "name": "AI Assistant",
+  "name": "AI Chat Assistant",
   "welcome": "Hi! How can I help you?",
   "systemPrompt": "You are a helpful assistant.",
   "suggestedQuestions": ["What is this page about?"]

@@ -24,7 +24,7 @@ function MarkdownBlock({ content }: { content: string }) {
 }
 
 export default function ChatPanel({ mode = 'full' }: { mode?: 'full' | 'widget' }) {
-  const [config, setConfig] = useState<SiteConfig>({ name: 'AI Assistant', welcome: '', suggestedQuestions: [] });
+  const [config, setConfig] = useState<SiteConfig>({ name: 'AI Chat Assistant', welcome: '', suggestedQuestions: [] });
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isStreaming, setIsStreaming] = useState(false);
@@ -35,7 +35,7 @@ export default function ChatPanel({ mode = 'full' }: { mode?: 'full' | 'widget' 
   }, []);
   const [conversationId] = useState(() => {
     if (typeof window === 'undefined') return '';
-    const key = 'ai-assistant-cid';
+    const key = 'ai-chat-assistant-cid';
     let cid = localStorage.getItem(key);
     if (!cid) {
       cid = crypto.randomUUID();
@@ -54,7 +54,7 @@ export default function ChatPanel({ mode = 'full' }: { mode?: 'full' | 'widget' 
       .then(r => r.json())
       .then(c => {
         setConfig({
-          name: c.name || 'AI Assistant',
+          name: c.name || 'AI Chat Assistant',
           welcome: c.welcome || '',
           suggestedQuestions: c.suggestedQuestions || [],
         });
@@ -190,7 +190,7 @@ export default function ChatPanel({ mode = 'full' }: { mode?: 'full' | 'widget' 
   const clearChat = useCallback(() => {
     setMessages([]);
     if (typeof window !== 'undefined') {
-      localStorage.removeItem('ai-assistant-cid');
+      localStorage.removeItem('ai-chat-assistant-cid');
     }
   }, []);
 
@@ -221,7 +221,7 @@ export default function ChatPanel({ mode = 'full' }: { mode?: 'full' | 'widget' 
           {!isWidget && (
             <>
               <a
-                href="https://github.com/TencentEdgeOne/AI-Assistant"
+                href="https://github.com/TencentEdgeOne/AI-Chat-Assistant"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="p-1.5 rounded-md text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition"
@@ -230,7 +230,7 @@ export default function ChatPanel({ mode = 'full' }: { mode?: 'full' | 'widget' 
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
               </a>
               <a
-                href="https://edgeone.ai/makers/new?template=ai-assistant&from=within&fromAgent=1&agentLang=typescript"
+                href="https://edgeone.ai/makers/new?template=ai-chat-assistant&from=within&fromAgent=1&agentLang=typescript"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gradient-to-r from-indigo-500 to-purple-500 text-white text-xs font-medium hover:shadow-md transition"

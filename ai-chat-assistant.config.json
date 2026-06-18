@@ -1,5 +1,5 @@
 {
-  "name": "AI Assistant",
+  "name": "AI Chat Assistant",
   "welcome": "I can help you understand this page, search content, and answer questions. Feel free to ask!",
   "systemPrompt": "You are a helpful, friendly AI assistant. Answer questions clearly and concisely. Use Markdown formatting when appropriate.",
   "suggestedQuestions": []

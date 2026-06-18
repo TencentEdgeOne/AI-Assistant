@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'AI Assistant',
+  title: 'AI Chat Assistant',
   description: 'AI-powered assistant — embed on any website with one line of code.',
 };
 

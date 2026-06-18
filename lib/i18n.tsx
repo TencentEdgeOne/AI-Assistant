@@ -4,7 +4,7 @@ import React, { createContext, useContext, useState, useCallback, useEffect, Rea
 
 const translations = {
   en: {
-    title: 'AI Assistant',
+    title: 'AI Chat Assistant',
     online: 'Online',
     placeholder: 'Type a message…',
     send: 'Send',

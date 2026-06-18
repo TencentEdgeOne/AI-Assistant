@@ -1,12 +1,12 @@
 /**
- * AI Assistant — Embed Script
+ * AI Chat Assistant — Embed Script
  *
  * Injects a floating chat bubble + iframe widget into any webpage.
  * The iframe loads /widget from the same origin as this script,
  * so all API calls are same-origin (no CORS issues).
  *
  * Usage:
- *   <script src="https://your-ai-assistant.edgeone.app/embed.js" async></script>
+ *   <script src="https://your-ai-chat-assistant.edgeone.app/embed.js" async></script>
  *
  * Options (data-* attributes):
  *   data-color    — Accent color (default: #6366f1)

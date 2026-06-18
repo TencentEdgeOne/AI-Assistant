@@ -39,9 +39,9 @@ async function loadConfig(): Promise<AssistantConfig> {
   if (_configLoaded) return _configCache || {};
   _configLoaded = true;
   try {
-    const content = await readFile(resolve(process.cwd(), 'ai-assistant.config.json'), 'utf-8');
+    const content = await readFile(resolve(process.cwd(), 'ai-chat-assistant.config.json'), 'utf-8');
     _configCache = JSON.parse(content);
-    logger.log(`[config] loaded ai-assistant.config.json`);
+    logger.log(`[config] loaded ai-chat-assistant.config.json`);
   } catch {
     _configCache = {};
   }
