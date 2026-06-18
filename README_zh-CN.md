@@ -58,11 +58,11 @@
 
 | 变量 | 必填 | 说明 |
 |------|------|------|
-| `AI_GATEWAY_API_KEY` | 是 | 模型网关 API Key |
-| `AI_GATEWAY_BASE_URL` | 是 | 网关地址。Makers 内置模型填 `https://ai-gateway.edgeone.link/v1` |
 | `AI_GATEWAY_MODEL` | 否 | 模型 ID，默认 `@makers/deepseek-v3` |
 | `DATA_API_BASE_URL` | 否 | 你的后端 API 基础地址 |
 | `DATA_API_KEY` | 否 | 后端 API 的认证 Token |
+
+> `AI_GATEWAY_API_KEY` 和 `AI_GATEWAY_BASE_URL` 通过一键部署时会自动注入。
 
 ## 业务 API 对接
 
@@ -90,6 +90,7 @@
 **前置条件：**
 - Node.js 18+
 - EdgeOne CLI（`npm i -g edgeone`）
+- 一个 `AI_GATEWAY_API_KEY` — 在 [Makers 控制台](https://edgeone.ai/makers/new?s_url=https://console.tencentcloud.com/edgeone/makers) → **Models → API Key** 中创建
 
 ```bash
 npm install
@@ -99,13 +100,6 @@ edgeone makers dev
 ```
 
 打开 http://localhost:8088 查看应用。
-
-### 获取 `AI_GATEWAY_API_KEY`
-
-1. 打开 [Makers 控制台](https://edgeone.ai/makers/new?s_url=https://console.tencentcloud.com/edgeone/makers)
-2. 登录并开通 Makers
-3. 进入 **Makers → Models → API Key**，创建一个 Key
-4. 填入 `AI_GATEWAY_API_KEY`
 
 > 内置模型在配额内免费，适合测试验证。生产环境建议绑定自己的付费模型 Key（BYOK）。
 

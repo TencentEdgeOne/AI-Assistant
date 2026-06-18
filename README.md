@@ -58,11 +58,11 @@ Edit `ai-assistant.config.json` in the project root:
 
 | Variable | Required | Description |
 |----------|----------|-------------|
-| `AI_GATEWAY_API_KEY` | Yes | Model gateway API key |
-| `AI_GATEWAY_BASE_URL` | Yes | Gateway base URL. For Makers Models, use `https://ai-gateway.edgeone.link/v1` |
 | `AI_GATEWAY_MODEL` | No | Model ID. Defaults to `@makers/deepseek-v3` |
 | `DATA_API_BASE_URL` | No | Your backend API base URL |
 | `DATA_API_KEY` | No | Auth token for your backend API |
+
+> `AI_GATEWAY_API_KEY` and `AI_GATEWAY_BASE_URL` are automatically injected when deploying via one-click deploy.
 
 ## Business API Integration
 
@@ -90,6 +90,7 @@ Set `DATA_API_BASE_URL` to your backend address.
 **Prerequisites:**
 - Node.js 18+
 - EdgeOne CLI (`npm i -g edgeone`)
+- An `AI_GATEWAY_API_KEY` — get one from [Makers Console](https://edgeone.ai/makers/new?s_url=https://console.tencentcloud.com/edgeone/makers) → **Models → API Key**
 
 ```bash
 npm install
@@ -99,13 +100,6 @@ edgeone makers dev
 ```
 
 Open http://localhost:8088 to view the app.
-
-### How to get `AI_GATEWAY_API_KEY`
-
-1. Open [Makers Console](https://edgeone.ai/makers/new?s_url=https://console.tencentcloud.com/edgeone/makers)
-2. Log in and enable Makers
-3. Go to **Makers → Models → API Key**, create a new key
-4. Set it as `AI_GATEWAY_API_KEY`
 
 > Built-in models are free within quota, great for testing. For production, bring your own key (BYOK) from any OpenAI-compatible provider.
 
